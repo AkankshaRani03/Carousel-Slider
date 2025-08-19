@@ -11,6 +11,7 @@ const captions = Array.from(slides).map(slide => {
 });
 
 let currentIndex = 0;
+let autoSlideInterval;
 
 // Generate dots dynamically
 dotsContainer.innerHTML = '';
@@ -36,10 +37,12 @@ function showSlide(index) {
 prevBtn.onclick = () => {
   currentIndex = (currentIndex - 1 + slides.length) % slides.length;
   showSlide(currentIndex);
+  resetAutoSlide();
 };
 nextBtn.onclick = () => {
   currentIndex = (currentIndex + 1) % slides.length;
   showSlide(currentIndex);
+  resetAutoSlide();
 };
 
 // Dot navigation
@@ -47,8 +50,22 @@ document.querySelectorAll('.dot').forEach(dot => {
   dot.onclick = () => {
     currentIndex = Number(dot.dataset.index);
     showSlide(currentIndex);
+    resetAutoSlide();
   };
 });
 
+// Auto slide function
+function autoSlide() {
+  currentIndex = (currentIndex + 1) % slides.length;
+  showSlide(currentIndex);
+}
+
+// Reset auto slide timer when user interacts
+function resetAutoSlide() {
+  clearInterval(autoSlideInterval);
+  autoSlideInterval = setInterval(autoSlide, 3000);
+}
+
 // Initialize
 showSlide(currentIndex);
+autoSlideInterval = setInterval(autoSlide, 3000);
